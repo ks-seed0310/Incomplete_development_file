@@ -1,90 +1,120 @@
 <!doctype html>
-<html lang=ja>
+<html lang="ja">
 <head>
-<meta charset=utf-8>
+<meta charset="utf-8">
 <style>
-.p_all{
+.p_all {
   text-align: center;
 }
 </style>
 </head>
 <body>
-<p class=p_all id="square_p"></p>
-<p class=p_all id="prime_p"></p>
+<p class="p_all" id="square_p"></p>
+<p class="p_all" id="prime_p"></p>
 </body>
 <script>
-  data={}
-  data["type"]=0
-  data["count_Enter"]=0
-  data["count_Space"]=0
-  data["temporary"]=""
-  data["play"]=0
-  const text=[{
-    /*text[0]で呼び出される範囲*/
-    1:"平方数出力"
-    2:"素数出力"
-  },{
-    /*text[1]で呼び出される範囲*/
-  }]
-  document.addEventListener("keyup",e=>{
-    if(e.key==="Enter"){
-      if(data["play"]!=0){return;}
-      data["count_Enter"]++
-      if(data["count_Enter"]>=10{
-        data["count_Enter"]=0
-        data["temporary"]=prompt("出力タイプを決定する\n\n1.　平方数出力\n2.　素数出力(開発中)")
-        if(data["temporary"]=="1" || data["temporary"]=="2"){
-          if (confirm(`${text[0][data["temporary"]]} に切り替えますか?\n現在: ${text[0][data["type"]]}`)){
-            data["type"]=data["temporary"]
-            data["temporary"]=""
-            alert(`${data["type"]}に変更しました。`)
-          }else{
-            alert("キャンセルしました。")
+  const data = {
+    type: 1,
+    count_Enter: 0,
+    count_Space: 0,
+    temporary: "",
+    temporary_1: 0,
+    play: 0
+  };
+
+  const text = [
+    {
+      1: "平方数出力",
+      2: "素数出力",
+    },
+    {}
+  ];
+
+  const element = [
+    document.getElementById("square_p"),
+    document.getElementById("prime_p")
+  ];
+
+  // --- Enter処理 ---
+  document.addEventListener("keyup", e => {
+    if (e.key === "Enter") {
+      if (data.play != 0) return;
+
+      data.count_Enter++;
+      if (data.count_Enter >= 10) {
+        data.count_Enter = 0;
+        data.temporary = prompt("出力タイプを決定する\n\n1. 平方数出力\n2. 素数出力(開発中)");
+
+        if (data.temporary === "1" || data.temporary === "2") {
+          if (confirm(`${text[0][data.temporary]} に切り替えますか?\n現在: ${text[0][data.type] || "なし"}`)) {
+            data.type = Number(data.temporary);
+            data.temporary = "";
+            alert(`${text[0][data.type]} に変更しました。`);
+          } else {
+            alert("キャンセルしました。");
           }
-        }else{
-          alert(`入力値が無効です\n内容: ${data["temporary"]}`)
-          data["temporary"]=""
-        }
-      }
-    }
-  })
-  document.addEventListener("keyup",e=>{
-    if(e.key===" "){
-      if(data["play"]!=0){return;}
-      data["count_Space"]++
-      if(data["count_Space"]>=10){
-        data["count_Space"]=0
-        if (confirm("処理が重くなる危険性があります。プログラムを実行しますか?"))
-      }
-    }
-  })
-function play() {
-  data.play = 1;
-
-  if (data.type === 1) {
-    const input = prompt("数を入力");
-    const num = Number(input);
-
-    // 入力が数でなければ終了
-    if (isNaN(num) || num <= 0) {
-      data.play = 0;
-      return;
-    }
-
-    data.temporary = num;
-
-    for (let i = 0; i < num; i++) {
-      setTimeout(() => {
-        op.innerHTML += i ** i + "\n";
-
-        // 最後のループが終わったタイミングでリセット
-        if (i === num - 1) {
-          data.play = 0;
+        } else {
+          alert(`入力値が無効です\n内容: ${data.temporary}`);
           data.temporary = "";
         }
-      }, i * 50);
+      }
+    }
+  });
+
+  // --- Space処理 ---
+  document.addEventListener("keyup", e => {
+    if (e.key === " ") {
+      data.count_Space++;
+      if (data.count_Space >= 10) {
+        data.count_Space = 0;
+        if (data.play != 0) {
+          if (confirm("処理を停止しますか？（現在動きません）")){
+            data.temporary_1 = 1; //停止フラグ
+          }
+        return;
+        }
+        if (confirm("処理が重くなる危険性があります。プログラムを実行しますか?")) {
+          play();
+        }
+      }
+    }
+  });
+
+  // --- メイン関数 ---
+  function play() {
+    data.play = 1;
+
+    if (data.type === 1) {
+      const input = prompt("数を入力");
+      const num = Number(input);
+
+      if (isNaN(num) || num <= 0) {
+        data.play = 0;
+        return;
+      }
+
+      data.temporary = num;
+      data.temporary_1 = 0; // フラグ初期化
+      element[0].innerHTML = ""; // 出力をリセット
+
+      for (let i = 0; i <= num; i++) {
+        setTimeout(() => {
+          // 停止フラグが立っていたら出力中断
+          if (data.temporary_1 === 1) {
+            element[0].innerHTML = "強制終了しました<br>" + element[0].innerHTML + "<br>";
+            data.play = 0;
+            data.temporary_1 = 0;
+            return; // このタイマー以降は出力しない
+          }
+
+          element[0].innerHTML += (i ** 2) + "<br>"; // 平方数出力
+          if (i === num) {
+            data.play = 0;
+            data.temporary = "";
+          }
+        }, i * 50);
+      }
     }
   }
-}
 </script>
 </html>
