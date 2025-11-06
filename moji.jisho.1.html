@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang=ja>
+<head>
+<meta charset=utf-8>
+</head>
+<body>
+<button onclick="play()"   id=button>Play</button> 
+<button onclick="copy()"   id=copy>Copy</button>
+<button onclick="reset()"  id=reset>Reset</button>
+<button onclick="speed_()" id=speed>Speed</button>
+<textarea id="txt" rows="18" style="width:100%; font-size:20px; " placeholder="Untitled 76.html" disabled></textarea>
+</body>
+<script>
+    const hira=["あ","い","う","え","お","か","き","く","け","こ","さ","し","す","せ","そ","た","ち","つ","て","と","な","に","ぬ","ね","の","は","ひ","ふ","へ","ほ","ま","み","む","め","も","や","ゆ","よ","ら","り","る","れ","ろ","わ","を","ん","ぁ","ぃ","ぅ","ぇ","ぉ","っ","ゃ","ゅ","ょ","が","ぎ","ぐ","げ","ご","ざ","じ","ず","ぜ","ぞ","だ","ぢ","づ","で","ど","ば","び","ぶ","べ","ぼ","ぱ","ぴ","ぷ","ぺ","ぽ"]
+    const kata_zen=["ア","イ","ウ","エ","オ","カ","キ","ク","ケ","コ","サ","シ","ス","セ","ソ","タ","チ","ツ","テ","ト","ナ","ニ","ヌ","ネ","ノ","ハ","ヒ","フ","ヘ","ホ","マ","ミ","ム","メ","モ","ヤ","ユ","ヨ","ラ","リ","ル","レ","ロ","ワ","ヲ","ン","ァ","ィ","ゥ","ェ","ォ","ッ","ャ","ュ","ョ","ガ","ギ","グ","ゲ","ゴ","ザ","ジ","ズ","ゼ","ゾ","ダ","ヂ","ヅ","デ","ド","バ","ビ","ブ","ベ","ボ","パ","ピ","プ","ペ","ポ"]
+    const kata_han=["ｱ","ｲ","ｳ","ｴ","ｵ","ｶ","ｷ","ｸ","ｹ","ｺ","ｻ","ｼ","ｽ","ｾ","ｿ","ﾀ","ﾁ","ﾂ","ﾃ","ﾄ","ﾅ","ﾆ","ﾇ","ﾈ","ﾉ","ﾊ","ﾋ","ﾌ","ﾍ","ﾎ","ﾏ","ﾐ","ﾑ","ﾒ","ﾓ","ﾔ","ﾕ","ﾖ","ﾗ","ﾘ","ﾙ","ﾚ","ﾛ","ﾜ","ｦ","ﾝ","ｧ","ｨ","ｩ","ｪ","ｫ","ｯ","ｬ","ｭ","ｮ","ｶﾞ","ｷﾞ","ｸﾞ","ｹﾞ","ｺﾞ","ｻﾞ","ｼﾞ","ｽﾞ","ｾﾞ","ｿﾞ","ﾀﾞ","ﾁﾞ","ﾂﾞ","ﾃﾞ","ﾄﾞ","ﾊﾞ","ﾋﾞ","ﾌﾞ","ﾍﾞ","ﾎﾞ","ﾊﾟ","ﾋﾟ","ﾌﾟ","ﾍﾟ","ﾎﾟ"]
+    const txt=document.getElementById("txt")
+    const button=document.getElementById("button")
+    const alltext={
+        "play_0":[
+            "準備中",
+            "準備中.",
+            "準備中..",
+            "準備中...",
+            "準備中..",
+            "準備中."
+        ],
+        "b":[
+            
+        ]
+    }
+    ichiji=0
+    //c=(a.join(txt)+txt+b.join(txt)).split(txt)
+    
+    function play(id=true){
+        button.disabled=true
+        txt.value=""
+        speed=50
+        let time=0
+        pass=0
+        load_end=false
+        for (let i=1; i<id*50+Math.floor(Math.random()*50)+1; i++){
+            time+=speed*4
+            console.log(time)
+            setTimeout(()=>{
+                txt.value=alltext["play_0"][i%alltext["play_0"].length]
+            },time)
+        }
+        time+=speed
+        setTimeout(()=>{
+            txt.value=`準備完了。開始まで約 ${speed*64/1000} 秒です`
+        },time)
+        txt.value=""
+        time+=speed*64
+        setTimeout(()=>{
+            op="List=[{"
+        },time)
+        for (let i=0; i<hira.length; i++){
+            //ひらがな:全角カタカナ
+            time+=speed
+            setTimeout(()=>{
+                op+="\n"
+                op+=`"${hira[i]}": `
+                txt.value=op
+            },time)
+            time+=speed
+            setTimeout(()=>{
+                op+=`"${kata_zen[i]}",`
+                txt.value=op
+            },time)
+        }
+        time+=speed
+        setTimeout(()=>{
+            op+="\n"
+        },time)
+        time+=speed
+        setTimeout(()=>{
+            op+="},{"
+        },time)
+        for (let i=0; i<kata_zen.length; i++){
+            //全角カタカナ:半角カタカナ
+            time+=speed
+            setTimeout(()=>{
+                op+="\n"
+                op+=`"${kata_zen[i]}": `
+                txt.value=op
+            },time)
+            time+=speed
+            setTimeout(()=>{
+                op+=`"${kata_han[i]}",`
+                txt_value=op
+            },time)
+        }
+        time+=speed
+        setTimeout(()=>{
+            op+="\n"
+        },time)
+        time+=speed
+        setTimeout(()=>{
+            op+="},{"
+        },time)
+        for (let i=0; i<kata_han.length; i++){
+            //半角カタカナ:ひらがな
+            time+=speed
+            setTimeout(()=>{
+                op+="\n"
+                op+=`"${kata_han[i]}": `
+                txt.value=op
+            },time)
+            time+=speed
+            setTimeout(()=>{
+                op+=`"${hira[i]}",`
+                txt.value=op
+            }
+            ,time)
+        }
+        time+=speed
+        setTimeout(()=>{
+            op+="\n"
+        },time)
+        time+=speed
+        setTimeout(()=>{
+            op+="}]"
+        },time)
+        time+=speed
+        setTimeout(()=>{
+            txt.value=op
+            button.disabled=false
+        },time)
+    }
+
+    async function copyText(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            alert('テキストがクリップボードにコピーされました');
+        }catch (err) {
+            alert('クリップボードへのコピーに失敗しました:', err);
+        }
+    }
+
+// 使用例：ボタンがクリックされたときに特定のテキストをコピーする
+
+    function copy(){
+        copyText(txt.value)
+        alert(`コピー内容: ${txt.value}`)
+    }
+    function reset(){
+        txt.value=""
+        op=""
+        time=0
+        speed=50
+    }
+    function speed_(){
+        ichiji=Number(prompt(`スピード変更\n1000=1秒\nプリセット:50(0.05秒)\n現在:${speed}`))
+        if(isNaN(ichiji)){
+            alert("不明な書き方")
+        }
+        if (confirm(`${ichiji}にしますか?現在:${speed}`)){
+            speed=ichiji
+        }
+        ichiji=0
+    }
+</script>
+</html>
